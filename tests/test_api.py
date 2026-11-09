@@ -110,3 +110,18 @@ def test_invalid_booking_attempts_with_email_are_rate_limited(client, headers):
     assert limited.status_code == 429
     assert int(limited.headers["Retry-After"]) >= 1
 
+
+def test_patient_web_routes_work_without_exposing_api_key(client, headers):
+    reset(client, headers, [slot()])
+    listed = client.get("/web/slots")
+    assert listed.status_code == 200
+    assert listed.json()["slots"][0]["id"] == "s1"
+
+    created = client.post(
+        "/web/bookings",
+        headers={"Idempotency-Key": "web-booking"},
+        json={"slot_id": "s1", "name": "Ada Obi", "email": "ada@example.com"},
+    )
+    assert created.status_code == 201
+    assert created.json()["status"] == "confirmed"
+

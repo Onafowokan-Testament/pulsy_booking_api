@@ -307,3 +307,20 @@ def cancel_booking(booking_id: str, db: Session = Depends(get_db)):
     db.commit()
     return booking_dict(booking)
 
+
+# The patient page uses same-origin server routes, so the private assessment key
+# never has to be embedded in public browser code. The required assessment API
+# endpoints above remain protected by X-API-Key.
+@app.get("/web/slots", include_in_schema=False)
+def web_list_slots(provider: str | None = None, db: Session = Depends(get_db)):
+    return list_slots(provider=provider, db=db)
+
+
+@app.post("/web/bookings", include_in_schema=False)
+def web_create_booking(
+    payload: dict = Body(...),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    db: Session = Depends(get_db),
+):
+    return create_booking(raw_payload=payload, idempotency_key=idempotency_key, db=db)
+

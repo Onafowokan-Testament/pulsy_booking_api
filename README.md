@@ -1,6 +1,6 @@
-# Koya Clinic Booking API
+# Pulsy Clinic Booking API
 
-A FastAPI implementation of all five assessment levels, with a responsive patient booking page served from the same application.
+A FastAPI implementation of all five assessment levels, with the animated Pulsy patient booking experience served from the same application.
 
 ## Features
 
@@ -13,6 +13,7 @@ A FastAPI implementation of all five assessment levels, with a responsive patien
 - Cursor-paginated booking history
 - Per-email booking-attempt rate limiting
 - Persistent PostgreSQL storage in production
+- Same-origin patient routes that keep the private API key out of browser code
 
 ## Run locally
 
@@ -26,7 +27,7 @@ copy .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Set `API_KEY` and `DATABASE_URL` in your environment. If `DATABASE_URL` is omitted, the app uses `booking.db` for local development. Open `http://127.0.0.1:8000` for the web page and `/docs` for interactive API documentation.
+Set `API_KEY` and `DATABASE_URL` in your environment. If `DATABASE_URL` is omitted, the app uses `booking.db` for local development. Open `http://127.0.0.1:8000` for the Pulsy web page and `/docs` for interactive API documentation.
 
 Run the test suite with:
 
@@ -47,7 +48,9 @@ All assessment endpoints require `X-API-Key`.
 | GET | `/bookings/{id}` | Look up a booking |
 | DELETE | `/bookings/{id}` | Cancel a booking |
 
-`GET /health` and the patient page at `/` are public so the host can monitor the service and patients can load the interface. Calls made by the page still require the supplied API key.
+`GET /health` and the patient page at `/` are public so the host can monitor the service and patients can load the interface.
+
+The patient page calls `/web/slots` and `/web/bookings`. These same-origin server routes reuse the booking service without exposing `API_KEY` in public JavaScript. All assessment endpoints remain protected by `X-API-Key`.
 
 ## Deploy
 

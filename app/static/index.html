@@ -3,106 +3,129 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Koya Clinic — Book an appointment</title>
+  <meta name="theme-color" content="#071d38">
+  <meta name="description" content="Book trusted clinic appointments in minutes with Pulsy.">
+  <title>Pulsy — Care, right on time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: light; --ink:#15251f; --muted:#65746e; --brand:#176b51; --pale:#eef7f3; --line:#d9e5df; --danger:#a33a3a; }
+    :root { color-scheme:light; --navy:#071d38; --teal:#12b8a6; --teal-dark:#078678; --coral:#ff7063; --cream:#f7fbfa; --ink:#10263f; --muted:#66788a; --line:#dce9e7; --danger:#b63d3d; --shadow:0 24px 70px rgba(7,29,56,.12); }
     * { box-sizing:border-box; }
-    body { margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; color:var(--ink); background:#f7faf8; }
-    header { padding:48px 20px 60px; background:linear-gradient(135deg,#0f513d,#238163); color:white; }
-    header div, main { width:min(100%,980px); margin:auto; }
-    h1 { margin:0 0 8px; font-size:clamp(2rem,5vw,3.6rem); letter-spacing:-.04em; }
-    header p { margin:0; opacity:.86; font-size:1.1rem; }
-    main { padding:0 20px 64px; transform:translateY(-28px); }
-    .panel { background:white; border:1px solid var(--line); border-radius:18px; padding:24px; box-shadow:0 18px 45px #163d2e12; }
-    .toolbar { display:flex; gap:12px; align-items:end; margin-bottom:22px; flex-wrap:wrap; }
-    label { display:grid; gap:6px; font-weight:650; }
-    input,button { font:inherit; border-radius:10px; padding:11px 13px; }
-    input { border:1px solid #b9cbc3; min-width:220px; }
-    input:focus { outline:3px solid #4ea98735; border-color:var(--brand); }
-    button { border:0; background:var(--brand); color:white; font-weight:700; cursor:pointer; }
-    button:hover { background:#10533e; }
-    button:disabled { opacity:.55; cursor:not-allowed; }
-    .slots { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
-    .slot { border:1px solid var(--line); border-radius:14px; padding:17px; display:grid; gap:7px; }
-    .slot strong { font-size:1.08rem; }
-    .slot small { color:var(--muted); }
-    .slot button { margin-top:7px; }
-    dialog { width:min(92vw,480px); border:0; border-radius:18px; padding:0; box-shadow:0 24px 80px #0004; }
-    dialog::backdrop { background:#10271f99; backdrop-filter:blur(3px); }
-    .dialog-body { padding:26px; }
-    .dialog-body form { display:grid; gap:16px; }
-    .dialog-body input { width:100%; }
-    .actions { display:flex; gap:10px; justify-content:flex-end; }
-    .secondary { color:var(--ink); background:#e7efeb; }
-    .notice { padding:13px 15px; background:var(--pale); border-radius:10px; margin-bottom:18px; }
-    .error { color:var(--danger); background:#fff0f0; }
-    .confirmation { text-align:center; padding:12px 0; }
-    .confirmation .check { margin:auto; display:grid; place-items:center; width:56px; height:56px; border-radius:50%; background:#dff4ea; color:var(--brand); font-size:1.8rem; }
-    .hidden { display:none; }
-    @media (max-width:560px) { header { padding-top:34px; } .panel { padding:17px; } .toolbar label { width:100%; } input { min-width:0; } }
+    html { scroll-behavior:smooth; }
+    body { margin:0; min-width:320px; color:var(--ink); background:var(--cream); font:15px/1.6 "DM Sans",system-ui,sans-serif; overflow-x:hidden; }
+    button,input { font:inherit; } button { cursor:pointer; }
+    button:focus-visible,input:focus-visible { outline:3px solid rgba(18,184,166,.3); outline-offset:2px; }
+    .shell { width:min(1180px,calc(100% - 40px)); margin:auto; }
+    .hero { position:relative; min-height:455px; color:white; overflow:hidden; background:linear-gradient(130deg,#061a33 0%,#0b3153 56%,#0c4e63 100%); }
+    .hero::before { content:""; position:absolute; width:520px; height:520px; right:-180px; top:-240px; border:1px solid rgba(255,255,255,.1); border-radius:50%; box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 140px rgba(255,255,255,.02); }
+    .hero::after { content:""; position:absolute; width:320px; height:320px; left:48%; bottom:-300px; border-radius:50%; background:var(--teal); filter:blur(100px); opacity:.25; }
+    nav { position:relative; z-index:2; height:88px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:11px; color:white; text-decoration:none; font:800 24px/1 "Manrope",sans-serif; letter-spacing:-.8px; }
+    .brand-mark { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; background:linear-gradient(145deg,#20d1bd,#0ea898); box-shadow:0 8px 25px rgba(18,184,166,.3); }
+    .brand-mark svg { width:28px; overflow:visible; } .brand-mark path { stroke-dasharray:65; stroke-dashoffset:65; animation:drawPulse 1.6s .25s ease forwards; }
+    .nav-badge { display:flex; gap:8px; align-items:center; padding:8px 13px; border:1px solid rgba(255,255,255,.16); border-radius:999px; background:rgba(255,255,255,.07); color:#d5e8ea; font-size:13px; backdrop-filter:blur(10px); }
+    .nav-badge i { width:8px; height:8px; border-radius:50%; background:#46df9a; box-shadow:0 0 0 5px rgba(70,223,154,.12); animation:livePulse 2s infinite; }
+    .hero-content { position:relative; z-index:1; display:grid; grid-template-columns:1.1fr .9fr; align-items:center; gap:70px; padding:54px 0 96px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:9px; margin-bottom:18px; color:#75e5d7; font-weight:700; font-size:13px; letter-spacing:.1em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:27px; height:2px; background:currentColor; }
+    h1 { max-width:680px; margin:0; font:800 clamp(2.7rem,5.7vw,5rem)/1.02 "Manrope",sans-serif; letter-spacing:-.055em; }
+    h1 em { color:#64ded0; font-style:normal; }
+    .hero-copy { max-width:570px; margin:24px 0 0; color:#c8d8df; font-size:17px; line-height:1.75; }
+    .hero-trust { display:flex; gap:25px; margin-top:32px; flex-wrap:wrap; }
+    .trust-item { display:flex; align-items:center; gap:9px; color:#d9e8ec; font-weight:600; font-size:13px; }
+    .trust-icon { display:grid; place-items:center; width:27px; height:27px; border-radius:50%; background:rgba(18,184,166,.15); color:#73e3d6; }
+    .hero-visual { position:relative; display:grid; place-items:center; min-height:240px; }
+    .orbit { position:absolute; width:260px; height:260px; border:1px solid rgba(115,227,214,.2); border-radius:50%; animation:spin 24s linear infinite; }
+    .orbit::before,.orbit::after { content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:var(--teal); box-shadow:0 0 25px var(--teal); }
+    .orbit::before { left:18px; top:45px; } .orbit::after { right:20px; bottom:42px; background:var(--coral); box-shadow:0 0 25px var(--coral); }
+    .heart-card { position:relative; width:210px; height:210px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.15); border-radius:52px; background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04)); box-shadow:0 30px 60px rgba(0,0,0,.2); backdrop-filter:blur(12px); transform:rotate(-4deg); }
+    .heart-card svg { width:125px; filter:drop-shadow(0 15px 25px rgba(18,184,166,.25)); animation:heartBeat 2.4s ease-in-out infinite; }
+    .mini-card { position:absolute; right:-15px; bottom:15px; display:flex; align-items:center; gap:10px; padding:12px 15px; color:var(--navy); border-radius:14px; background:white; box-shadow:var(--shadow); font-weight:700; font-size:12px; animation:float 4s ease-in-out infinite; }
+    .mini-card span { display:grid; place-items:center; width:29px; height:29px; border-radius:9px; color:var(--teal-dark); background:#dcf8f4; font-size:16px; }
+    main { position:relative; z-index:3; margin-top:-48px; padding-bottom:80px; }
+    .booking-card { background:rgba(255,255,255,.97); border:1px solid rgba(213,230,227,.8); border-radius:26px; box-shadow:var(--shadow); overflow:hidden; animation:riseIn .7s .15s both; }
+    .booking-head { display:flex; justify-content:space-between; gap:30px; align-items:center; padding:30px 34px 24px; border-bottom:1px solid var(--line); }
+    .booking-head h2 { margin:0 0 4px; font:800 25px/1.25 "Manrope",sans-serif; letter-spacing:-.035em; } .booking-head p { margin:0; color:var(--muted); }
+    .availability { flex:none; display:flex; align-items:center; gap:10px; padding:10px 14px; color:#087469; border-radius:12px; background:#e6faf6; font-weight:700; font-size:13px; }
+    .availability span { width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(18,184,166,.14); }
+    .filter-row { display:flex; gap:10px; padding:20px 34px; overflow:auto; scrollbar-width:none; } .filter-row::-webkit-scrollbar { display:none; }
+    .filter { flex:none; padding:9px 16px; color:var(--muted); border:1px solid var(--line); border-radius:999px; background:white; font-weight:700; font-size:13px; transition:.25s ease; }
+    .filter:hover { color:var(--teal-dark); border-color:#a5dcd5; transform:translateY(-1px); } .filter.active { color:white; border-color:var(--navy); background:var(--navy); box-shadow:0 8px 18px rgba(7,29,56,.15); }
+    .slots-wrap { min-height:290px; padding:4px 34px 34px; } .date-group + .date-group { margin-top:28px; }
+    .date-title { display:flex; align-items:center; gap:12px; margin:0 0 13px; color:var(--muted); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }
+    .date-title::after { content:""; height:1px; flex:1; background:var(--line); }
+    .slots { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .slot { position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:14px; min-width:0; padding:17px; border:1px solid var(--line); border-radius:17px; background:white; transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; animation:riseIn .45s both; }
+    .slot:hover { z-index:1; transform:translateY(-4px); border-color:#94d6ce; box-shadow:0 14px 35px rgba(7,29,56,.09); }
+    .avatar { display:grid; place-items:center; width:45px; height:45px; border-radius:14px; color:#087d71; background:linear-gradient(145deg,#dff9f5,#c8eee8); font:800 16px "Manrope",sans-serif; }
+    .slot-info { min-width:0; } .slot-info strong { display:block; overflow:hidden; color:var(--ink); text-overflow:ellipsis; white-space:nowrap; font:700 14px "Manrope",sans-serif; }
+    .slot-time { display:flex; align-items:center; gap:5px; margin-top:4px; color:var(--muted); font-size:12px; }
+    .slot button { display:grid; place-items:center; width:37px; height:37px; padding:0; color:var(--teal-dark); border:0; border-radius:11px; background:#e8f8f5; transition:.2s ease; }
+    .slot button:hover { color:white; background:var(--teal); transform:translateX(2px); }
+    .skeleton { height:81px; border-radius:17px; background:linear-gradient(90deg,#edf3f2 25%,#f8fbfa 50%,#edf3f2 75%); background-size:200% 100%; animation:shimmer 1.35s infinite; }
+    .empty { grid-column:1/-1; padding:56px 20px; text-align:center; color:var(--muted); } .empty-icon { width:60px; height:60px; display:grid; place-items:center; margin:0 auto 14px; border-radius:19px; color:var(--teal-dark); background:#e3f7f4; font-size:25px; }
+    .how { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:28px; } .step { display:flex; gap:15px; padding:20px 5px; }
+    .step-num { flex:none; display:grid; place-items:center; width:37px; height:37px; border-radius:12px; color:white; background:var(--navy); font:800 13px "Manrope",sans-serif; }
+    .step h3 { margin:0 0 3px; font:700 14px "Manrope",sans-serif; } .step p { margin:0; color:var(--muted); font-size:13px; }
+    dialog { width:min(94vw,510px); max-height:92vh; padding:0; border:0; border-radius:25px; color:var(--ink); background:white; box-shadow:0 35px 110px rgba(1,18,35,.34); overflow:auto; }
+    dialog[open] { animation:modalIn .32s cubic-bezier(.2,.8,.2,1); } dialog::backdrop { background:rgba(3,19,36,.72); backdrop-filter:blur(8px); animation:fadeIn .25s; }
+    .dialog-top { position:relative; padding:28px 30px 23px; color:white; background:linear-gradient(135deg,var(--navy),#0d4961); overflow:hidden; }
+    .dialog-top::after { content:""; position:absolute; width:160px; height:160px; right:-60px; top:-95px; border:35px solid rgba(255,255,255,.05); border-radius:50%; }
+    .dialog-label { margin:0 0 6px; color:#73e3d6; font-size:12px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; } .dialog-top h2 { position:relative; margin:0; font:800 25px "Manrope",sans-serif; letter-spacing:-.03em; }
+    .close-x { position:absolute; z-index:2; right:20px; top:20px; width:35px; height:35px; color:white; border:1px solid rgba(255,255,255,.18); border-radius:11px; background:rgba(255,255,255,.08); font-size:20px; }
+    .appointment-summary { display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; margin:22px 30px 2px; padding:15px; border:1px solid #cfe8e4; border-radius:15px; background:#f1fbf9; }
+    .calendar-box { min-width:50px; padding:7px 6px; text-align:center; color:white; border-radius:12px; background:var(--teal); } .calendar-box b,.calendar-box span { display:block; } .calendar-box b { font:800 18px "Manrope",sans-serif; line-height:1.1; } .calendar-box span { font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .summary-text strong { display:block; font:700 14px "Manrope",sans-serif; } .summary-text span { color:var(--muted); font-size:13px; }
+    form { display:grid; gap:16px; padding:24px 30px 30px; } label { display:grid; gap:7px; color:#31465b; font-weight:700; font-size:13px; }
+    input { width:100%; padding:13px 14px; color:var(--ink); border:1px solid #c9d9d7; border-radius:12px; background:#fbfdfd; transition:.2s ease; } input:hover { border-color:#a9c6c2; } input:focus { border-color:var(--teal); background:white; }
+    .form-note { display:flex; gap:9px; align-items:flex-start; color:var(--muted); font-size:11px; } .form-note svg { flex:none; margin-top:2px; color:var(--teal-dark); }
+    .form-error { padding:11px 13px; color:var(--danger); border-radius:10px; background:#fff0ef; font-size:13px; font-weight:600; }
+    .actions { display:flex; gap:10px; margin-top:4px; } .btn { min-height:48px; padding:12px 18px; border:0; border-radius:12px; font-weight:800; transition:.22s ease; }
+    .btn-primary { flex:1; color:white; background:linear-gradient(135deg,var(--teal),#079588); box-shadow:0 10px 23px rgba(18,184,166,.22); } .btn-primary:hover { transform:translateY(-2px); box-shadow:0 14px 28px rgba(18,184,166,.3); } .btn-primary:disabled { cursor:wait; opacity:.65; transform:none; }
+    .btn-secondary { color:#526679; background:#edf3f2; } .btn-secondary:hover { background:#e3ecea; }
+    .success { position:relative; padding:42px 30px 34px; text-align:center; overflow:hidden; } .success-mark { display:grid; place-items:center; width:74px; height:74px; margin:0 auto 19px; color:white; border-radius:24px; background:linear-gradient(145deg,#20ceb9,#079b8d); box-shadow:0 17px 35px rgba(18,184,166,.28); animation:successPop .55s cubic-bezier(.2,1.5,.5,1); }
+    .success h2 { margin:0; font:800 27px "Manrope",sans-serif; letter-spacing:-.04em; } .success > p { margin:8px auto 22px; color:var(--muted); max-width:360px; }
+    .reference { margin-bottom:22px; padding:13px; color:var(--muted); border:1px dashed #bbd6d2; border-radius:12px; background:#f7fbfa; font-size:11px; } .reference b { display:block; color:var(--ink); font-size:13px; overflow-wrap:anywhere; }
+    .success-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; } .confetti { position:absolute; width:8px; height:15px; top:-20px; border-radius:2px; animation:confetti 1.8s ease-out forwards; }
+    .hidden { display:none!important; } footer { padding:28px 20px; color:#8292a1; text-align:center; font-size:12px; }
+    @keyframes drawPulse { to { stroke-dashoffset:0; } } @keyframes livePulse { 50% { box-shadow:0 0 0 8px rgba(70,223,154,0); } } @keyframes heartBeat { 0%,100% { transform:scale(1); } 8% { transform:scale(1.07); } 16% { transform:scale(1); } 24% { transform:scale(1.045); } }
+    @keyframes spin { to { transform:rotate(360deg); } } @keyframes float { 50% { transform:translateY(-9px); } } @keyframes riseIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes shimmer { to { background-position:-200% 0; } } @keyframes modalIn { from { opacity:0; transform:translateY(16px) scale(.97); } to { opacity:1; transform:none; } } @keyframes fadeIn { from { opacity:0; } }
+    @keyframes successPop { from { transform:scale(.3) rotate(-20deg); opacity:0; } } @keyframes confetti { to { transform:translate(var(--drift),540px) rotate(540deg); opacity:0; } }
+    @media (max-width:900px) { .hero-content { grid-template-columns:1fr; padding-top:38px; } .hero-visual { display:none; } .slots { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:640px) { .shell { width:min(100% - 26px,1180px); } nav { height:74px; } .nav-badge { padding:7px 10px; font-size:11px; } .hero { min-height:420px; } .hero-content { padding:48px 0 90px; } h1 { font-size:2.65rem; } .hero-copy { font-size:15px; } .hero-trust { gap:13px; } .booking-head { align-items:flex-start; padding:23px 19px 19px; } .availability { display:none; } .filter-row { padding:16px 19px; } .slots-wrap { padding:2px 19px 25px; } .slots { grid-template-columns:1fr; } .how { grid-template-columns:1fr; gap:0; margin-top:16px; } .step { padding:12px 5px; } .dialog-top { padding:25px 22px 21px; } .appointment-summary { margin:18px 20px 0; } form { padding:22px 20px 24px; } .success { padding:36px 20px 26px; } .success-actions { grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; } }
   </style>
 </head>
 <body>
-  <header><div><h1>Book your clinic visit</h1><p>Choose an available appointment and receive instant confirmation.</p></div></header>
-  <main><section class="panel">
-    <div class="toolbar">
-      <label>API key <input id="api-key" type="password" placeholder="Enter your API key" autocomplete="off"></label>
-      <button id="load">View available slots</button>
+  <header class="hero">
+    <nav class="shell"><a class="brand" href="#" aria-label="Pulsy home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 28" fill="none"><path d="M2 15h8l4-10 7 20 6-15 4 5h15" stroke="white" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pulsy</a><div class="nav-badge"><i></i> Secure booking</div></nav>
+    <div class="hero-content shell"><div><span class="eyebrow">Care, right on time</span><h1>Your health deserves a <em>simpler</em> appointment.</h1><p class="hero-copy">Find a trusted clinician, choose a time that works, and confirm your visit in under a minute.</p><div class="hero-trust"><span class="trust-item"><span class="trust-icon">✓</span> Instant confirmation</span><span class="trust-item"><span class="trust-icon">⌁</span> Private & secure</span><span class="trust-item"><span class="trust-icon">◷</span> No phone calls</span></div></div>
+      <div class="hero-visual" aria-hidden="true"><div class="orbit"></div><div class="heart-card"><svg viewBox="0 0 160 130" fill="none"><path d="M80 120S20 87 20 43C20 17 51 4 70 26L80 38l10-12c19-22 50-9 50 17 0 44-60 77-60 77Z" fill="#12b8a6"/><path d="M42 66h22l8-22 14 43 10-28 7 10h20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="mini-card"><span>✓</span> Ready when you are</div></div></div>
     </div>
-    <div id="message" class="notice">Enter the supplied API key to load appointment slots.</div>
-    <div id="slots" class="slots"></div>
-  </section></main>
-
-  <dialog id="booking-dialog"><div class="dialog-body">
-    <div id="form-view">
-      <h2>Confirm appointment</h2><p id="chosen-slot"></p>
-      <form id="booking-form">
-        <label>Full name <input id="name" required autocomplete="name"></label>
-        <label>Email address <input id="email" type="email" required autocomplete="email"></label>
-        <div id="form-error" class="notice error hidden"></div>
-        <div class="actions"><button type="button" class="secondary" id="close">Cancel</button><button id="submit">Book appointment</button></div>
-      </form>
-    </div>
-    <div id="confirmation" class="confirmation hidden"><div class="check">✓</div><h2>Appointment confirmed</h2><p id="confirmation-text"></p><button id="done">Done</button></div>
-  </div></dialog>
-
+  </header>
+  <main class="shell"><section class="booking-card" aria-labelledby="booking-title"><div class="booking-head"><div><h2 id="booking-title">Choose an appointment</h2><p>Times shown in your local timezone</p></div><div class="availability"><span></span><b id="available-count">Checking availability</b></div></div><div id="filters" class="filter-row" aria-label="Filter by clinician"></div><div class="slots-wrap"><div id="slots" class="slots" aria-live="polite"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div></section>
+    <section class="how" aria-label="How booking works"><article class="step"><span class="step-num">01</span><div><h3>Pick your time</h3><p>Browse live appointment availability.</p></div></article><article class="step"><span class="step-num">02</span><div><h3>Share your details</h3><p>Tell us who the appointment is for.</p></div></article><article class="step"><span class="step-num">03</span><div><h3>You're confirmed</h3><p>Get an instant booking reference.</p></div></article></section>
+  </main>
+  <dialog id="booking-dialog" aria-labelledby="dialog-title"><div id="form-view"><div class="dialog-top"><p class="dialog-label">Almost there</p><h2 id="dialog-title">Confirm your visit</h2><button class="close-x" id="close-x" type="button" aria-label="Close">×</button></div><div class="appointment-summary"><div class="calendar-box"><span id="summary-month"></span><b id="summary-day"></b></div><div class="summary-text"><strong id="summary-provider"></strong><span id="summary-time"></span></div></div><form id="booking-form"><label>Full name<input id="name" name="name" required minlength="2" maxlength="255" autocomplete="name" placeholder="e.g. Ada Obi"></label><label>Email address<input id="email" name="email" type="email" required maxlength="320" autocomplete="email" placeholder="ada@example.com"></label><div class="form-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="2"/></svg>Your details are used only to manage this appointment.</div><div id="form-error" class="form-error hidden" role="alert"></div><div class="actions"><button class="btn btn-secondary" id="close" type="button">Back</button><button class="btn btn-primary" id="submit" type="submit">Confirm appointment <span aria-hidden="true">→</span></button></div></form></div>
+    <div id="confirmation" class="success hidden"><div id="confetti-layer" aria-hidden="true"></div><div class="success-mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>You're all set!</h2><p id="confirmation-text"></p><div class="reference">Booking reference<b id="booking-reference"></b></div><div class="success-actions"><button id="calendar" class="btn btn-secondary">Add to calendar</button><button id="done" class="btn btn-primary">Done</button></div></div>
+  </dialog>
+  <footer>© 2026 Pulsy Health · Thoughtful care begins with your time.</footer>
   <script>
-    const keyInput = document.querySelector('#api-key');
-    const slotsEl = document.querySelector('#slots');
-    const message = document.querySelector('#message');
-    const dialog = document.querySelector('#booking-dialog');
-    let selected = null;
-
-    const headers = () => ({'X-API-Key': keyInput.value.trim(), 'Content-Type':'application/json'});
-    const format = value => new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short'}).format(new Date(value));
-    async function loadSlots() {
-      message.className = 'notice'; message.textContent = 'Loading appointments…'; slotsEl.innerHTML = '';
-      try {
-        const response = await fetch('/slots',{headers:headers()}); const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Could not load slots');
-        const available = data.slots.filter(slot => slot.available && new Date(slot.start) > new Date());
-        message.textContent = available.length ? `${available.length} appointment${available.length === 1 ? '' : 's'} available` : 'No appointments are currently available.';
-        available.forEach(slot => {
-          const card = document.createElement('article'); card.className = 'slot';
-          card.innerHTML = `<strong>${escapeHtml(slot.provider)}</strong><span>${format(slot.start)}</span><small>${format(slot.start).split(',').at(-1)} – ${format(slot.end).split(',').at(-1)}</small><button>Choose this time</button>`;
-          card.querySelector('button').onclick = () => openBooking(slot); slotsEl.append(card);
-        });
-      } catch (error) { message.className = 'notice error'; message.textContent = error.message; }
-    }
-    const escapeHtml = value => { const el=document.createElement('span'); el.textContent=value; return el.innerHTML; };
-    function openBooking(slot) { selected=slot; document.querySelector('#chosen-slot').textContent=`${slot.provider} · ${format(slot.start)}`; document.querySelector('#form-view').classList.remove('hidden'); document.querySelector('#confirmation').classList.add('hidden'); dialog.showModal(); }
-    document.querySelector('#load').onclick = loadSlots;
-    document.querySelector('#close').onclick = () => dialog.close();
-    document.querySelector('#done').onclick = () => { dialog.close(); loadSlots(); };
-    document.querySelector('#booking-form').onsubmit = async event => {
-      event.preventDefault(); const submit=document.querySelector('#submit'); const errorEl=document.querySelector('#form-error'); submit.disabled=true; errorEl.classList.add('hidden');
-      try {
-        const response=await fetch('/bookings',{method:'POST',headers:{...headers(),'Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({slot_id:selected.id,name:document.querySelector('#name').value,email:document.querySelector('#email').value})}); const data=await response.json();
-        if (!response.ok) throw new Error(data.error || 'Booking failed');
-        document.querySelector('#form-view').classList.add('hidden'); document.querySelector('#confirmation').classList.remove('hidden'); document.querySelector('#confirmation-text').textContent=`Your booking reference is ${data.id}. A confirmation is reserved for ${format(selected.start)}.`;
-      } catch(error) { errorEl.textContent=error.message; errorEl.classList.remove('hidden'); } finally { submit.disabled=false; }
-    };
+    const state={slots:[],provider:'All',selected:null,booking:null}; const $=s=>document.querySelector(s); const slotsEl=$('#slots'),filtersEl=$('#filters'),countEl=$('#available-count'),dialog=$('#booking-dialog');
+    const escapeHtml=value=>{const el=document.createElement('span');el.textContent=String(value);return el.innerHTML};
+    const dateText=value=>new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric'}).format(new Date(value)); const timeText=value=>new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'}).format(new Date(value)); const initials=name=>name.split(/\s+/).map(p=>p[0]).join('').slice(0,2).toUpperCase();
+    async function loadSlots(){try{const response=await fetch('/web/slots'),data=await response.json();if(!response.ok)throw new Error(data.error||'We could not load appointments.');state.slots=data.slots.filter(slot=>slot.available&&new Date(slot.start)>new Date());countEl.textContent=`${state.slots.length} time${state.slots.length===1?'':'s'} available`;renderFilters();renderSlots()}catch(error){countEl.textContent='Unable to connect';slotsEl.innerHTML=`<div class="empty"><div class="empty-icon">↻</div><b>Appointments could not be loaded</b><p>${escapeHtml(error.message)}</p><button class="filter active" onclick="loadSlots()">Try again</button></div>`}}
+    function renderFilters(){const providers=['All',...new Set(state.slots.map(s=>s.provider))];if(!providers.includes(state.provider))state.provider='All';filtersEl.innerHTML=providers.map(p=>`<button class="filter ${p===state.provider?'active':''}" data-provider="${escapeHtml(p)}">${p==='All'?'All clinicians':escapeHtml(p)}</button>`).join('');filtersEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.provider=b.dataset.provider;renderFilters();renderSlots()})}
+    function groupByDate(items){return items.reduce((groups,item)=>{const key=new Date(item.start).toDateString();(groups[key]??=[]).push(item);return groups},{})}
+    function renderSlots(){const visible=state.provider==='All'?state.slots:state.slots.filter(s=>s.provider===state.provider);if(!visible.length){slotsEl.innerHTML='<div class="empty"><div class="empty-icon">◷</div><b>No times available</b><p>Please choose another clinician or check back soon.</p></div>';return}const groups=groupByDate(visible);slotsEl.innerHTML=Object.values(groups).map(group=>`<section class="date-group" style="grid-column:1/-1"><h3 class="date-title">${dateText(group[0].start)}</h3><div class="slots">${group.map((slot,index)=>`<article class="slot" style="animation-delay:${index*55}ms"><div class="avatar">${escapeHtml(initials(slot.provider.replace(/^Dr\.?\s*/i,'')))}</div><div class="slot-info"><strong>${escapeHtml(slot.provider)}</strong><span class="slot-time">◷ ${timeText(slot.start)} – ${timeText(slot.end)}</span></div><button data-slot="${escapeHtml(slot.id)}" aria-label="Choose ${escapeHtml(slot.provider)} at ${timeText(slot.start)}">→</button></article>`).join('')}</div></section>`).join('');slotsEl.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>openBooking(state.slots.find(s=>s.id===b.dataset.slot)))}
+    function openBooking(slot){state.selected=slot;const date=new Date(slot.start);$('#summary-month').textContent=new Intl.DateTimeFormat(undefined,{month:'short'}).format(date);$('#summary-day').textContent=date.getDate();$('#summary-provider').textContent=slot.provider;$('#summary-time').textContent=`${dateText(slot.start)} · ${timeText(slot.start)}–${timeText(slot.end)}`;$('#form-view').classList.remove('hidden');$('#confirmation').classList.add('hidden');$('#form-error').classList.add('hidden');dialog.showModal();setTimeout(()=>$('#name').focus(),200)}
+    function closeDialog(){dialog.close()} $('#close').onclick=closeDialog;$('#close-x').onclick=closeDialog;dialog.addEventListener('click',event=>{if(event.target===dialog)closeDialog()});$('#done').onclick=()=>{closeDialog();loadSlots()};
+    $('#booking-form').onsubmit=async event=>{event.preventDefault();const submit=$('#submit'),errorEl=$('#form-error');submit.disabled=true;submit.textContent='Securing your time…';errorEl.classList.add('hidden');try{const key=crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`;const response=await fetch('/web/bookings',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify({slot_id:state.selected.id,name:$('#name').value,email:$('#email').value})}),data=await response.json();if(!response.ok)throw new Error(data.error||'We could not complete your booking.');state.booking=data;$('#form-view').classList.add('hidden');$('#confirmation').classList.remove('hidden');$('#confirmation-text').textContent=`Your visit with ${state.selected.provider} is confirmed for ${dateText(state.selected.start)} at ${timeText(state.selected.start)}.`;$('#booking-reference').textContent=data.id;celebrate()}catch(error){errorEl.textContent=error.message;errorEl.classList.remove('hidden')}finally{submit.disabled=false;submit.innerHTML='Confirm appointment <span aria-hidden="true">→</span>'}};
+    function celebrate(){const layer=$('#confetti-layer'),colors=['#12b8a6','#ff7063','#ffd166','#1784c7'];layer.innerHTML='';for(let i=0;i<22;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=`${8+Math.random()*84}%`;piece.style.background=colors[i%colors.length];piece.style.setProperty('--drift',`${(Math.random()-.5)*180}px`);piece.style.animationDelay=`${Math.random()*.35}s`;layer.append(piece)}}
+    $('#calendar').onclick=()=>{const slot=state.selected,stamp=value=>new Date(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Pulsy//Clinic Booking//EN','BEGIN:VEVENT',`UID:${state.booking.id}@pulsy.health`,`DTSTAMP:${stamp(new Date())}`,`DTSTART:${stamp(slot.start)}`,`DTEND:${stamp(slot.end)}`,`SUMMARY:Appointment with ${slot.provider}`,'DESCRIPTION:Booked through Pulsy.','END:VEVENT','END:VCALENDAR'].join('\r\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));link.download='pulsy-appointment.ics';link.click();URL.revokeObjectURL(link.href)};
+    loadSlots();
   </script>
 </body>
 </html>
-
