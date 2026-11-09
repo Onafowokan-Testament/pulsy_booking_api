@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071d38">
-  <meta name="description" content="Book trusted clinic appointments in minutes with Pulsy.">
-  <title>Pulsy — Care, right on time</title>
+  <meta name="description" content="Book trusted clinic appointments in minutes with PULsy.">
+  <title>PULsy — Care, right on time</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -100,7 +100,7 @@
 </head>
 <body>
   <header class="hero">
-    <nav class="shell"><a class="brand" href="#" aria-label="Pulsy home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 28" fill="none"><path d="M2 15h8l4-10 7 20 6-15 4 5h15" stroke="white" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pulsy</a><div class="nav-badge"><i></i> Secure booking</div></nav>
+    <nav class="shell"><a class="brand" href="#" aria-label="PULsy home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 28" fill="none"><path d="M2 15h8l4-10 7 20 6-15 4 5h15" stroke="white" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>PULsy</a><div class="nav-badge"><i></i> Secure booking</div></nav>
     <div class="hero-content shell"><div><span class="eyebrow">Care, right on time</span><h1>Your health deserves a <em>simpler</em> appointment.</h1><p class="hero-copy">Find a trusted clinician, choose a time that works, and confirm your visit in under a minute.</p><div class="hero-trust"><span class="trust-item"><span class="trust-icon">✓</span> Instant confirmation</span><span class="trust-item"><span class="trust-icon">⌁</span> Private & secure</span><span class="trust-item"><span class="trust-icon">◷</span> No phone calls</span></div></div>
       <div class="hero-visual" aria-hidden="true"><div class="orbit"></div><div class="heart-card"><svg viewBox="0 0 160 130" fill="none"><path d="M80 120S20 87 20 43C20 17 51 4 70 26L80 38l10-12c19-22 50-9 50 17 0 44-60 77-60 77Z" fill="#12b8a6"/><path d="M42 66h22l8-22 14 43 10-28 7 10h20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="mini-card"><span>✓</span> Ready when you are</div></div></div>
     </div>
@@ -111,7 +111,7 @@
   <dialog id="booking-dialog" aria-labelledby="dialog-title"><div id="form-view"><div class="dialog-top"><p class="dialog-label">Almost there</p><h2 id="dialog-title">Confirm your visit</h2><button class="close-x" id="close-x" type="button" aria-label="Close">×</button></div><div class="appointment-summary"><div class="calendar-box"><span id="summary-month"></span><b id="summary-day"></b></div><div class="summary-text"><strong id="summary-provider"></strong><span id="summary-time"></span></div></div><form id="booking-form"><label>Full name<input id="name" name="name" required minlength="2" maxlength="255" autocomplete="name" placeholder="e.g. Ada Obi"></label><label>Email address<input id="email" name="email" type="email" required maxlength="320" autocomplete="email" placeholder="ada@example.com"></label><div class="form-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="2"/></svg>Your details are used only to manage this appointment.</div><div id="form-error" class="form-error hidden" role="alert"></div><div class="actions"><button class="btn btn-secondary" id="close" type="button">Back</button><button class="btn btn-primary" id="submit" type="submit">Confirm appointment <span aria-hidden="true">→</span></button></div></form></div>
     <div id="confirmation" class="success hidden"><div id="confetti-layer" aria-hidden="true"></div><div class="success-mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>You're all set!</h2><p id="confirmation-text"></p><div class="reference">Booking reference<b id="booking-reference"></b></div><div class="success-actions"><button id="calendar" class="btn btn-secondary">Add to calendar</button><button id="done" class="btn btn-primary">Done</button></div></div>
   </dialog>
-  <footer>© 2026 Pulsy Health · Thoughtful care begins with your time.</footer>
+  <footer>© 2026 PULsy Health · Thoughtful care begins with your time.</footer>
   <script>
     const state={slots:[],provider:'All',selected:null,booking:null}; const $=s=>document.querySelector(s); const slotsEl=$('#slots'),filtersEl=$('#filters'),countEl=$('#available-count'),dialog=$('#booking-dialog');
     const escapeHtml=value=>{const el=document.createElement('span');el.textContent=String(value);return el.innerHTML};

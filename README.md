@@ -1,6 +1,6 @@
-# Pulsy Clinic Booking API
+# PULsy Clinic Booking API
 
-A FastAPI implementation of all five assessment levels, with the animated Pulsy patient booking experience served from the same application.
+A FastAPI implementation of all five assessment levels, with the animated PULsy patient booking experience served from the same application.
 
 ## Features
 
@@ -27,7 +27,7 @@ copy .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Set `API_KEY` and `DATABASE_URL` in your environment. If `DATABASE_URL` is omitted, the app uses `booking.db` for local development. Open `http://127.0.0.1:8000` for the Pulsy web page and `/docs` for interactive API documentation.
+Set `API_KEY` and `DATABASE_URL` in your environment. If `DATABASE_URL` is omitted, the app uses `booking.db` for local development. Open `http://127.0.0.1:8000` for the PULsy web page and `/docs` for interactive API documentation.
 
 Run the test suite with:
 
