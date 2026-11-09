@@ -100,3 +100,13 @@ def test_provider_filter_invalid_limit_and_error_replay(client, headers):
     assert first.status_code == second.status_code == 404
     assert first.json() == second.json() == {"error": "slot not found"}
 
+
+def test_invalid_booking_attempts_with_email_are_rate_limited(client, headers):
+    reset(client, headers, [])
+    invalid = {"slot_id": "missing", "name": "", "email": "Invalid-Email"}
+    for _ in range(5):
+        assert client.post("/bookings", headers=headers, json=invalid).status_code == 400
+    limited = client.post("/bookings", headers=headers, json=invalid)
+    assert limited.status_code == 429
+    assert int(limited.headers["Retry-After"]) >= 1
+

@@ -7,12 +7,13 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy import delete, func, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from pydantic import ValidationError
 
 from .database import Base, engine, get_db
 from .models import Booking, BookingAttempt, IdempotencyRecord, Slot
@@ -168,22 +169,7 @@ def lock_rate_limit_email(db: Session, email: str) -> None:
         db.execute(text("SELECT pg_advisory_xact_lock(:lock_id)"), {"lock_id": lock_id})
 
 
-@app.post("/bookings", status_code=201, dependencies=[secured])
-def create_booking(
-    payload: BookingInput,
-    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
-    db: Session = Depends(get_db),
-):
-    body_hash = request_hash(payload)
-    if idempotency_key:
-        if not idempotency_key.strip():
-            raise api_error("Idempotency-Key must not be empty", 400)
-        replay = replay_or_conflict(db, idempotency_key, body_hash)
-        if replay:
-            return replay
-
-    now = utcnow()
-    email = str(payload.email).lower()
+def enforce_rate_limit(db: Session, email: str, now: datetime) -> None:
     lock_rate_limit_email(db, email)
     window_start = now - timedelta(minutes=1)
     attempts = db.scalar(
@@ -201,6 +187,37 @@ def create_booking(
         retry_after = max(1, int((as_utc(oldest) + timedelta(minutes=1) - now).total_seconds()) + 1)
         raise api_error("too many booking attempts", 429, {"Retry-After": str(retry_after)})
 
+
+@app.post("/bookings", status_code=201, dependencies=[secured])
+def create_booking(
+    raw_payload: dict = Body(...),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    db: Session = Depends(get_db),
+):
+    now = utcnow()
+    try:
+        payload = BookingInput.model_validate(raw_payload)
+    except ValidationError as exc:
+        raw_email = raw_payload.get("email")
+        if isinstance(raw_email, str) and raw_email.strip():
+            attempted_email = raw_email.strip().lower()
+            enforce_rate_limit(db, attempted_email, now)
+            db.add(BookingAttempt(email=attempted_email, attempted_at=now))
+            db.commit()
+        errors = exc.errors()
+        field = errors[0].get("loc", ["request"])[-1] if errors else "request"
+        return JSONResponse({"error": f"invalid or missing {field}"}, status_code=400)
+
+    body_hash = request_hash(payload)
+    if idempotency_key:
+        if not idempotency_key.strip():
+            raise api_error("Idempotency-Key must not be empty", 400)
+        replay = replay_or_conflict(db, idempotency_key, body_hash)
+        if replay:
+            return replay
+
+    email = str(payload.email).lower()
+    enforce_rate_limit(db, email, now)
     db.add(BookingAttempt(email=email, attempted_at=now))
     slot = db.get(Slot, payload.slot_id)
     if slot is None:
