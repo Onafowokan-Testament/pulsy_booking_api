@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Koya Clinic — Book an appointment</title>
+  <style>
+    :root { color-scheme: light; --ink:#15251f; --muted:#65746e; --brand:#176b51; --pale:#eef7f3; --line:#d9e5df; --danger:#a33a3a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; color:var(--ink); background:#f7faf8; }
+    header { padding:48px 20px 60px; background:linear-gradient(135deg,#0f513d,#238163); color:white; }
+    header div, main { width:min(100%,980px); margin:auto; }
+    h1 { margin:0 0 8px; font-size:clamp(2rem,5vw,3.6rem); letter-spacing:-.04em; }
+    header p { margin:0; opacity:.86; font-size:1.1rem; }
+    main { padding:0 20px 64px; transform:translateY(-28px); }
+    .panel { background:white; border:1px solid var(--line); border-radius:18px; padding:24px; box-shadow:0 18px 45px #163d2e12; }
+    .toolbar { display:flex; gap:12px; align-items:end; margin-bottom:22px; flex-wrap:wrap; }
+    label { display:grid; gap:6px; font-weight:650; }
+    input,button { font:inherit; border-radius:10px; padding:11px 13px; }
+    input { border:1px solid #b9cbc3; min-width:220px; }
+    input:focus { outline:3px solid #4ea98735; border-color:var(--brand); }
+    button { border:0; background:var(--brand); color:white; font-weight:700; cursor:pointer; }
+    button:hover { background:#10533e; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .slots { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+    .slot { border:1px solid var(--line); border-radius:14px; padding:17px; display:grid; gap:7px; }
+    .slot strong { font-size:1.08rem; }
+    .slot small { color:var(--muted); }
+    .slot button { margin-top:7px; }
+    dialog { width:min(92vw,480px); border:0; border-radius:18px; padding:0; box-shadow:0 24px 80px #0004; }
+    dialog::backdrop { background:#10271f99; backdrop-filter:blur(3px); }
+    .dialog-body { padding:26px; }
+    .dialog-body form { display:grid; gap:16px; }
+    .dialog-body input { width:100%; }
+    .actions { display:flex; gap:10px; justify-content:flex-end; }
+    .secondary { color:var(--ink); background:#e7efeb; }
+    .notice { padding:13px 15px; background:var(--pale); border-radius:10px; margin-bottom:18px; }
+    .error { color:var(--danger); background:#fff0f0; }
+    .confirmation { text-align:center; padding:12px 0; }
+    .confirmation .check { margin:auto; display:grid; place-items:center; width:56px; height:56px; border-radius:50%; background:#dff4ea; color:var(--brand); font-size:1.8rem; }
+    .hidden { display:none; }
+    @media (max-width:560px) { header { padding-top:34px; } .panel { padding:17px; } .toolbar label { width:100%; } input { min-width:0; } }
+  </style>
+</head>
+<body>
+  <header><div><h1>Book your clinic visit</h1><p>Choose an available appointment and receive instant confirmation.</p></div></header>
+  <main><section class="panel">
+    <div class="toolbar">
+      <label>API key <input id="api-key" type="password" placeholder="Enter your API key" autocomplete="off"></label>
+      <button id="load">View available slots</button>
+    </div>
+    <div id="message" class="notice">Enter the supplied API key to load appointment slots.</div>
+    <div id="slots" class="slots"></div>
+  </section></main>
+
+  <dialog id="booking-dialog"><div class="dialog-body">
+    <div id="form-view">
+      <h2>Confirm appointment</h2><p id="chosen-slot"></p>
+      <form id="booking-form">
+        <label>Full name <input id="name" required autocomplete="name"></label>
+        <label>Email address <input id="email" type="email" required autocomplete="email"></label>
+        <div id="form-error" class="notice error hidden"></div>
+        <div class="actions"><button type="button" class="secondary" id="close">Cancel</button><button id="submit">Book appointment</button></div>
+      </form>
+    </div>
+    <div id="confirmation" class="confirmation hidden"><div class="check">✓</div><h2>Appointment confirmed</h2><p id="confirmation-text"></p><button id="done">Done</button></div>
+  </div></dialog>
+
+  <script>
+    const keyInput = document.querySelector('#api-key');
+    const slotsEl = document.querySelector('#slots');
+    const message = document.querySelector('#message');
+    const dialog = document.querySelector('#booking-dialog');
+    let selected = null;
+
+    const headers = () => ({'X-API-Key': keyInput.value.trim(), 'Content-Type':'application/json'});
+    const format = value => new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short'}).format(new Date(value));
+    async function loadSlots() {
+      message.className = 'notice'; message.textContent = 'Loading appointments…'; slotsEl.innerHTML = '';
+      try {
+        const response = await fetch('/slots',{headers:headers()}); const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Could not load slots');
+        const available = data.slots.filter(slot => slot.available && new Date(slot.start) > new Date());
+        message.textContent = available.length ? `${available.length} appointment${available.length === 1 ? '' : 's'} available` : 'No appointments are currently available.';
+        available.forEach(slot => {
+          const card = document.createElement('article'); card.className = 'slot';
+          card.innerHTML = `<strong>${escapeHtml(slot.provider)}</strong><span>${format(slot.start)}</span><small>${format(slot.start).split(',').at(-1)} – ${format(slot.end).split(',').at(-1)}</small><button>Choose this time</button>`;
+          card.querySelector('button').onclick = () => openBooking(slot); slotsEl.append(card);
+        });
+      } catch (error) { message.className = 'notice error'; message.textContent = error.message; }
+    }
+    const escapeHtml = value => { const el=document.createElement('span'); el.textContent=value; return el.innerHTML; };
+    function openBooking(slot) { selected=slot; document.querySelector('#chosen-slot').textContent=`${slot.provider} · ${format(slot.start)}`; document.querySelector('#form-view').classList.remove('hidden'); document.querySelector('#confirmation').classList.add('hidden'); dialog.showModal(); }
+    document.querySelector('#load').onclick = loadSlots;
+    document.querySelector('#close').onclick = () => dialog.close();
+    document.querySelector('#done').onclick = () => { dialog.close(); loadSlots(); };
+    document.querySelector('#booking-form').onsubmit = async event => {
+      event.preventDefault(); const submit=document.querySelector('#submit'); const errorEl=document.querySelector('#form-error'); submit.disabled=true; errorEl.classList.add('hidden');
+      try {
+        const response=await fetch('/bookings',{method:'POST',headers:{...headers(),'Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({slot_id:selected.id,name:document.querySelector('#name').value,email:document.querySelector('#email').value})}); const data=await response.json();
+        if (!response.ok) throw new Error(data.error || 'Booking failed');
+        document.querySelector('#form-view').classList.add('hidden'); document.querySelector('#confirmation').classList.remove('hidden'); document.querySelector('#confirmation-text').textContent=`Your booking reference is ${data.id}. A confirmation is reserved for ${format(selected.start)}.`;
+      } catch(error) { errorEl.textContent=error.message; errorEl.classList.remove('hidden'); } finally { submit.disabled=false; }
+    };
+  </script>
+</body>
+</html>
+
